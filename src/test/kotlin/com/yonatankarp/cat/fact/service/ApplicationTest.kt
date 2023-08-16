@@ -1,4 +1,4 @@
-package com.yonatankarp.springbootapptemplate
+package com.yonatankarp.cat.fact.service
 
 import org.jooq.DSLContext
 import org.junit.jupiter.api.Assertions.assertNotNull

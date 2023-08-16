@@ -1,4 +1,4 @@
-rootProject.name = "spring-boot-app-template"
+rootProject.name = "cat-fact-service"
 include(
-    "spring-boot-app-template"
+    "cat-fact"
 )

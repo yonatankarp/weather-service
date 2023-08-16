@@ -1,7 +1,7 @@
 FROM eclipse-temurin:17-jre-alpine
 
 ENV APP_BASE="/home" \
-    APP_NAME="spring-boot-app-template" \
+    APP_NAME="cat-fact-service" \
     SERVER_PORT="8080"
 
 EXPOSE ${SERVER_PORT}

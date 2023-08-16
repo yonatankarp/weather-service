@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [ spring-boot-app-template ]
+        service: [ cat-fact-service ]
     runs-on: ubuntu-latest
     permissions:
       actions: read
