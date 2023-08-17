@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine
+FROM --platform=linux/x86_64 eclipse-temurin:17-jre-alpine
 
 ENV APP_BASE="/home" \
     APP_NAME="cat-fact-service" \

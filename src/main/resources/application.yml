@@ -35,7 +35,7 @@ spring:
   application:
     name: cat-fact-service
   datasource:
-    url: "jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_SCHEMA:cat-facts}"
+    url: "jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_SCHEMA:facts}"
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:secret}
     driver-class-name: org.postgresql.Driver
