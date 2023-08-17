@@ -1,6 +1,4 @@
-CREATE TABLE hello_world (
-    id SERIAL PRIMARY KEY,
-    message VARCHAR(255) NOT NULL
+CREATE TABLE cat_facts (
+    hash INT PRIMARY KEY,
+    fact TEXT NOT NULL
 );
-
-INSERT INTO hello_world (message) VALUES ('Hello World!');

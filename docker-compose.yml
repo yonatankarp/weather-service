@@ -1,5 +1,22 @@
-version: "3.9"
+version: '3'
+
 services:
+  cat-fact-service:
+    container_name: cat-fact-service
+    networks:
+      - proxynet
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=facts
+      - DB_USER=postgres
+      - DB_PASSWORD=secret
+
   postgres:
     container_name: cat-fact-service-postgres
     networks:
@@ -7,13 +24,11 @@ services:
     image: postgres:14
     restart: always
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "secret"
-      POSTGRES_DB: "cat-fact-service"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: facts
     ports:
       - "5432:5432"
-    expose:
-      - "5432"
 
 networks:
   proxynet:
