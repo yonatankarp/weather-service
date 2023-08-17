@@ -35,10 +35,6 @@ jobs:
     if: |
       (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
       (github.event_name != 'pull_request_target' && github.actor != 'dependabot[bot]')
-    strategy:
-      fail-fast: false
-      matrix:
-        service: [ cat-fact-service ]
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -78,9 +74,8 @@ jobs:
           filters: |
             source_code:
               - '.github/workflows/**'
-              - '${{ matrix.service }}/src/**'
-              - '${{ matrix.service }}/Dockerfile'
-              - '${{ matrix.service }}/build.gradle.kts'
+              - 'src/**'
+              - 'Dockerfile'
               - 'build.gradle.kts'
               - 'gradlew'
               - 'gradlew.bat'
@@ -97,7 +92,7 @@ jobs:
         if: steps.changes.outputs.source_code == 'true'
         id: container
         run: |
-          docker build --file ./${{ matrix.service }}/Dockerfile --tag ${{ matrix.service }}:latest .
+          docker build --file ./Dockerfile --tag cat-fact-service:latest .
 
   dependabot_auto_merge:
     if: ${{ github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]' }}
