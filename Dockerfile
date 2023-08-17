@@ -10,7 +10,7 @@ RUN apk update && apk upgrade && apk add curl openssl gcompat bash busybox-extra
 
 RUN mkdir -p ${APP_BASE}/${APP_NAME}
 
-COPY ${APP_NAME}/build/libs/${APP_NAME}*.jar ${APP_BASE}/${APP_NAME}.jar
+COPY build/libs/${APP_NAME}*.jar ${APP_BASE}/${APP_NAME}.jar
 
 CMD java $JAVA_OPTS \
     -jar ${APP_BASE}/${APP_NAME}.jar
