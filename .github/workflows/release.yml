@@ -1,0 +1,74 @@
+name: Release
+
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [ cat-fact-service ]
+    steps:
+      - name: Git Checkout
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
+        # Do not trigger a checkout when opening PRs from a fork (helps avoid
+        # "pwnn request". See https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target )
+        with:
+          fetch-depth: 0
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          #Instead of manually configure caching of gradle, use an action which is provided. Details here: https://github.com/actions/setup-java
+          cache: gradle
+
+      - name: Get the version
+        id: version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      - name: Log tag version
+        run: echo "The version is ${{ steps.version.outputs.VERSION }}"
+
+      - name: Gradle Test
+        id: tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew build
+
+      - name: Build Docker Image
+        id: container
+        run: |
+          docker build --file ./Dockerfile --tag ghcr.io/forkinggeniuses/${{ matrix.service }}:latest --tag ghcr.io/forkinggeniuses/${{ matrix.service }}:${{ steps.version.outputs.VERSION }} .
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Publish to GHCR
+        shell: bash
+        run: |
+          # push to ghcr
+          
+          echo ${{ github.token }} \
+            | docker login ghcr.io \
+              --username $ \
+              --password-stdin
+          
+          docker push ghcr.io/forkinggeniuses/${{ matrix.service }}:${{ steps.version.outputs.VERSION }}
+          docker push ghcr.io/forkinggeniuses/${{ matrix.service }}:latest
