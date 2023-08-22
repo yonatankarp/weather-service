@@ -40,7 +40,7 @@ kotlin {
 
 dependencies {
 
-    implementation("com.yonatankarp:cat-fact-client:0.2.0")
+    implementation("com.yonatankarp:cat-fact-client:${libs.versions.catFactClient.get()}")
 
     // Spring Boot
     implementation(libs.bundles.springboot.all)
@@ -56,6 +56,10 @@ dependencies {
     // Documentation
     implementation(libs.springdoc.openapi.starter)
 
+    // Observability
+    implementation("io.honeycomb:honeycomb-opentelemetry-sdk:${libs.versions.honeycomb.get()}")
+    compileOnly("io.honeycomb:honeycomb-opentelemetry-javaagent:${libs.versions.honeycomb.get()}")
+
     // Tests
     testImplementation(libs.mockk.core)
     testImplementation(libs.mockk.spring)
@@ -70,14 +74,28 @@ dependencyManagement {
     }
 }
 
-
 tasks {
+    bootRun {
+        environment = mapOf(
+            "HONEYCOMB_API_KEY" to System.getenv("HONEYCOMB_API_KEY"),
+            "SERVICE_NAME" to "cat-fact-service",
+            "HONEYCOMB_API_ENDPOINT" to "https://api.honeycomb.io:443",
+        )
+
+        jvmArgs = listOf(
+            "-javaagent:${layout.buildDirectory.get().asFile}/output/libs/honeycomb-opentelemetry-javaagent.jar",
+            "-Dotel.resource.attributes=github.repository=https://github.com/ForkingGeniuses/cat-fact-service",
+        )
+    }
+
     getByName<Jar>("jar") {
         enabled = false
     }
 
     build {
         finalizedBy(spotlessApply)
+        dependsOn("copyOpenTelemetryAgent")
+
     }
 
     withType<Test> {
@@ -96,10 +114,21 @@ tasks {
             html.required.set(true)
         }
     }
+
+    register<Copy>("copyOpenTelemetryAgent") {
+        project.delete(
+            fileTree("${layout.buildDirectory.get().asFile}/output/libs"),
+        )
+
+        from(configurations.compileClasspath)
+        into("${layout.buildDirectory.get().asFile}/output/libs")
+        include("honeycomb-opentelemetry-javaagent*")
+        rename("-[1-9]+.[0-9]+.[0-9]+.jar", ".jar")
+    }
 }
 
 val tasksDependencies = mapOf(
-    "spotlessKotlin" to listOf("compileKotlin", "compileTestKotlin", "test", "jacocoTestReport")
+    "spotlessKotlin" to listOf("compileKotlin", "compileTestKotlin", "test", "jacocoTestReport", "copyOpenTelemetryAgent")
 )
 
 tasksDependencies.forEach { (taskName, dependencies) ->

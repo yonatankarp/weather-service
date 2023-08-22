@@ -16,6 +16,10 @@ services:
       - DB_NAME=facts
       - DB_USER=postgres
       - DB_PASSWORD=secret
+      - HONEYCOMB_API_KEY=${HONEYCOMB_API_KEY}
+      - SERVICE_NAME=cat-fact-service
+      - HONEYCOMB_API_ENDPOINT=https://api.honeycomb.io:443
+      - OTEL_JAVAAGENT_DEBUG=false
 
   postgres:
     container_name: cat-fact-service-postgres
