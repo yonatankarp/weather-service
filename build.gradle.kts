@@ -16,14 +16,14 @@ repositories {
     mavenCentral()
     maven { url = uri("https://packages.confluent.io/maven/") }
     maven {
-        url = uri("https://maven.pkg.github.com/ForkingGeniuses/cat-fact-service")
+        url = uri("https://maven.pkg.github.com/yonatankarp/cat-fact-service")
         credentials {
             username = findProperty("gpr.user")?.toString() ?: System.getenv("GITHUB_ACTOR")
             password = findProperty("gpr.key")?.toString() ?: System.getenv("GITHUB_TOKEN")
         }
     }
     maven {
-        url = uri("https://maven.pkg.github.com/ForkingGeniuses/cat-fact-client")
+        url = uri("https://maven.pkg.github.com/yonatankarp/cat-fact-client")
         credentials {
             username = project.findProperty("gpr.user")?.toString() ?: System.getenv("GITHUB_ACTOR")
             password = project.findProperty("gpr.key")?.toString() ?: System.getenv("PACKAGES_READ_TOKEN")
@@ -84,7 +84,7 @@ tasks {
 
         jvmArgs = listOf(
             "-javaagent:${layout.buildDirectory.get().asFile}/output/libs/honeycomb-opentelemetry-javaagent.jar",
-            "-Dotel.resource.attributes=github.repository=https://github.com/ForkingGeniuses/cat-fact-service",
+            "-Dotel.resource.attributes=github.repository=https://github.com/yonatankarp/cat-fact-service",
         )
     }
 

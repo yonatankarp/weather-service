@@ -2,7 +2,7 @@ FROM --platform=linux/x86_64 eclipse-temurin:17-jre-alpine
 
 ENV APP_BASE="/home" \
     APP_NAME="cat-fact-service" \
-    OTEL_ATTRIBUTES="github.repository=https://github.com/ForkingGeniuses/cat-fact-service" \
+    OTEL_ATTRIBUTES="github.repository=https://github.com/yonatankarp/cat-fact-service" \
     SERVER_PORT="8080"
 
 EXPOSE ${SERVER_PORT}
