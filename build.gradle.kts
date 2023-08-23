@@ -22,6 +22,13 @@ repositories {
             password = findProperty("gpr.key")?.toString() ?: System.getenv("GITHUB_TOKEN")
         }
     }
+    maven {
+        url = uri("https://maven.pkg.github.com/ForkingGeniuses/cat-fact-client")
+        credentials {
+            username = project.findProperty("gpr.user")?.toString() ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.key")?.toString() ?: System.getenv("PACKAGES_READ_TOKEN")
+        }
+    }
 }
 
 kotlin {
@@ -32,6 +39,9 @@ kotlin {
 }
 
 dependencies {
+
+    implementation("com.yonatankarp:cat-fact-client:0.2.0")
+
     // Spring Boot
     implementation(libs.bundles.springboot.all)
 
@@ -56,7 +66,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("org.testcontainers:testcontainers-bom:1.18.3")
+        mavenBom("org.testcontainers:testcontainers-bom:${libs.versions.testcontainers.get()}")
     }
 }
 
