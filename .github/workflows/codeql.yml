@@ -34,6 +34,7 @@ jobs:
         id: build_jar
         env:
           GRADLE_USER_HOME: .gradle
+          PACKAGES_READ_TOKEN: ${{ secrets.ORGANIZATION_PAT }}
         run: ./gradlew assemble
 
       - name: Perform CodeQL Analysis
