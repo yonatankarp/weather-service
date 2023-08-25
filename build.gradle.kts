@@ -80,6 +80,7 @@ tasks {
             "HONEYCOMB_API_KEY" to System.getenv("HONEYCOMB_API_KEY"),
             "SERVICE_NAME" to "cat-fact-service",
             "HONEYCOMB_API_ENDPOINT" to "https://api.honeycomb.io:443",
+            "ENVIRONMENT" to "test",
         )
 
         jvmArgs = listOf(
