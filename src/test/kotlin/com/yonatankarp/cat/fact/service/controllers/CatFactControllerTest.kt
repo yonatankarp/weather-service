@@ -24,8 +24,9 @@ import org.springframework.test.web.servlet.get
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(controllers = [CatFactController::class])
 @TestConstructor(autowireMode = AutowireMode.ALL)
-class CatFactControllerTest(private val mockMvc: MockMvc) {
-
+class CatFactControllerTest(
+    private val mockMvc: MockMvc,
+) {
     @MockkBean
     private lateinit var service: CatFactService
 
@@ -33,49 +34,52 @@ class CatFactControllerTest(private val mockMvc: MockMvc) {
     private lateinit var requestContext: RequestContext
 
     @Test
-    fun `should serve default amount of facts`() = runTest {
-        coEvery { service.storeFacts(any()) } returns Unit
-        coEvery { requestContext.facts } returns setOf(Fact("fact about cat..."))
+    fun `should serve default amount of facts`() =
+        runTest {
+            coEvery { service.storeFacts(any()) } returns Unit
+            coEvery { requestContext.facts } returns setOf(Fact("fact about cat..."))
 
-        mockMvc.get("/api/v1/cat/facts")
-            .asyncDispatch()
-            .andExpect {
-                status { isOk() }
-                content {
-                    jsonPath("$.facts[0]") { value("fact about cat...") }
-                }
-            }
-            .andDo { print() }
-            .andReturn()
+            mockMvc
+                .get("/api/v1/cat/facts")
+                .asyncDispatch()
+                .andExpect {
+                    status { isOk() }
+                    content {
+                        jsonPath("$.facts[0]") { value("fact about cat...") }
+                    }
+                }.andDo { print() }
+                .andReturn()
 
-        coVerify(exactly = 1) { requestContext.facts }
-        coVerify(exactly = 1) { service.storeFacts(any()) }
-    }
+            coVerify(exactly = 1) { requestContext.facts }
+            coVerify(exactly = 1) { service.storeFacts(any()) }
+        }
 
     @ParameterizedTest
     @MethodSource("getData")
-    fun `should serve custom amount of facts`(amountOfFacts: Int) = runTest {
-        coEvery { service.storeFacts(any()) } returns Unit
-        coEvery { requestContext.facts } returns (1..amountOfFacts).map { Fact("Fact $it") }.toSet()
+    fun `should serve custom amount of facts`(amountOfFacts: Int) =
+        runTest {
+            coEvery { service.storeFacts(any()) } returns Unit
+            coEvery { requestContext.facts } returns (1..amountOfFacts).map { Fact("Fact $it") }.toSet()
 
-        val result = mockMvc.get("/api/v1/cat/facts?max=$amountOfFacts")
-            .asyncDispatch()
-            .andExpect {
-                status { isOk() }
-                content {
-                    for (i in 0..<amountOfFacts) {
-                        jsonPath("$.facts[$i]") { value("Fact ${i + 1}") }
-                    }
-                }
-            }
-            .andDo { print() }
-            .andReturn()
+            val result =
+                mockMvc
+                    .get("/api/v1/cat/facts?max=$amountOfFacts")
+                    .asyncDispatch()
+                    .andExpect {
+                        status { isOk() }
+                        content {
+                            for (i in 0..<amountOfFacts) {
+                                jsonPath("$.facts[$i]") { value("Fact ${i + 1}") }
+                            }
+                        }
+                    }.andDo { print() }
+                    .andReturn()
 
-        println(result.response.contentAsString)
+            println(result.response.contentAsString)
 
-        coVerify(exactly = 1) { requestContext.facts }
-        coVerify(exactly = 1) { service.storeFacts(any()) }
-    }
+            coVerify(exactly = 1) { requestContext.facts }
+            coVerify(exactly = 1) { service.storeFacts(any()) }
+        }
 
     companion object {
         @JvmStatic

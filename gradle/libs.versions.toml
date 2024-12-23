@@ -7,12 +7,12 @@ jacoco = "0.8.7"
 jooq = "0.9.15"
 jooq_docker_plugin = "0.3.9"
 jvmTarget = "17"
-kotlin = "1.8.22"
+kotlin = "2.1.0"
 mockk = "1.13.14"
 mockkSpring = "4.0.2"
 postgres = "42.7.4"
 pwd = "6.42.0"
-spotless = "6.19.0"
+spotless = "6.25.0"
 spring_dependency_management = "1.1.0"
 springboot = "3.1.0"
 springdoc = "2.6.0"
@@ -20,6 +20,10 @@ swagger = "6.6.0"
 testcontainers = "1.20.4"
 
 [libraries]
+
+# Cat Fact Client
+
+cat_fact_client = { module = "com.yonatankarp:cat-fact-client", version.ref = "catFactClient" }
 
 # Kotlin & Coroutines
 kotlin_core = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
@@ -37,6 +41,11 @@ springboot_test_starter = { module = "org.springframework.boot:spring-boot-start
 springboot_validation_starter = { module = "org.springframework.boot:spring-boot-starter-validation" }
 springboot_web_starter = { module = "org.springframework.boot:spring-boot-starter-web" }
 springdoc_openapi_starter = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+## Observability
+
+honeycomb_opentelemetry_sdk = { module = "io.honeycomb:honeycomb-opentelemetry-sdk", version.ref = "honeycomb" }
+honeycomb_opentelemetry_javaagent = { module = "io.honeycomb:honeycomb-opentelemetry-javaagent", version.ref = "honeycomb" }
 
 # Persistence
 flyway_core = { module = "org.flywaydb:flyway-core" }

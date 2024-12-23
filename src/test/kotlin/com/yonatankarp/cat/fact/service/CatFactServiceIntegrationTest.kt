@@ -28,34 +28,36 @@ class CatFactServiceIntegrationTest(
     private val mockMvc: MockMvc,
     private val jooq: DSLContext,
 ) : AbstractIntegrationTest() {
-
     @MockkBean
     private lateinit var provider: CatFactProvider
 
     @Test
-    fun `should fetch facts and store them correctly in the database`() = runTest {
-        // Given facts
-        val catFact = "fact about cat..."
-        coEvery { provider.get(any()) } returns setOf(Fact(catFact))
+    fun `should fetch facts and store them correctly in the database`() =
+        runTest {
+            // Given facts
+            val catFact = "fact about cat..."
+            coEvery { provider.get(any()) } returns setOf(Fact(catFact))
 
-        // When we make a call to the service
-        mockMvc.get("/api/v1/cat/facts")
-            .asyncDispatch()
-            .andExpect {
-                status { isOk() }
-                content {
-                    jsonPath("$.facts[0]") { value(catFact) }
-                }
-            }
-            .andDo { print() }
-            .andReturn()
+            // When we make a call to the service
+            mockMvc
+                .get("/api/v1/cat/facts")
+                .asyncDispatch()
+                .andExpect {
+                    status { isOk() }
+                    content {
+                        jsonPath("$.facts[0]") { value(catFact) }
+                    }
+                }.andDo { print() }
+                .andReturn()
 
-        // Then we expect the facts to be correctly stored in the db
-        val fact = jooq.selectFrom(Tables.CAT_FACTS)
-            .limit(1)
-            .fetchOne()
+            // Then we expect the facts to be correctly stored in the db
+            val fact =
+                jooq
+                    .selectFrom(Tables.CAT_FACTS)
+                    .limit(1)
+                    .fetchOne()
 
-        assertNotNull(fact)
-        assertEquals(catFact, fact!!.fact)
-    }
+            assertNotNull(fact)
+            assertEquals(catFact, fact!!.fact)
+        }
 }
