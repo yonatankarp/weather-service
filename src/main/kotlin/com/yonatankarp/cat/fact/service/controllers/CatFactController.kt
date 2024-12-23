@@ -23,4 +23,6 @@ class CatFactController(
 
 private fun Set<Fact>.toResponse() = FactsResponse(this)
 
-data class FactsResponse(val facts: Set<Fact>)
+data class FactsResponse(
+    val facts: Set<Fact>,
+)

@@ -5,7 +5,8 @@ import com.yonatankarpcat.fact.client.ports.Fact
 import org.springframework.stereotype.Service
 
 @Service
-class CatFactService(private val repository: CatFactRepository) {
-    suspend fun storeFacts(facts: Set<Fact>) =
-        facts.forEach { repository.storeFacts(it) }
+class CatFactService(
+    private val repository: CatFactRepository,
+) {
+    suspend fun storeFacts(facts: Set<Fact>) = facts.forEach { repository.storeFacts(it) }
 }

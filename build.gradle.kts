@@ -40,7 +40,7 @@ kotlin {
 
 dependencies {
 
-    implementation("com.yonatankarp:cat-fact-client:${libs.versions.catFactClient.get()}")
+    implementation(libs.cat.fact.client)
 
     // Spring Boot
     implementation(libs.bundles.springboot.all)
@@ -57,8 +57,8 @@ dependencies {
     implementation(libs.springdoc.openapi.starter)
 
     // Observability
-    implementation("io.honeycomb:honeycomb-opentelemetry-sdk:${libs.versions.honeycomb.get()}")
-    compileOnly("io.honeycomb:honeycomb-opentelemetry-javaagent:${libs.versions.honeycomb.get()}")
+    implementation(libs.honeycomb.opentelemetry.sdk)
+    compileOnly(libs.honeycomb.opentelemetry.javaagent)
 
     // Tests
     testImplementation(libs.mockk.core)

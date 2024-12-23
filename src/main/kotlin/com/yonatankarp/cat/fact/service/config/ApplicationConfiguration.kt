@@ -18,14 +18,14 @@ import org.springframework.web.context.request.ServletRequestAttributes
 @Configuration
 class ApplicationConfiguration {
     @Bean
-    fun catFactProvider(objectMapper: ObjectMapper): CatFactProvider =
-        CatFactFactory.getInstance(ProviderType.API, objectMapper)
+    fun catFactProvider(objectMapper: ObjectMapper): CatFactProvider = CatFactFactory.getInstance(ProviderType.API, objectMapper)
 
     @Bean
     @Scope(WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.INTERFACES)
-    fun requestContext(catFactProvider: CatFactProvider): RequestContext = runBlocking {
-        RequestContextImpl(catFactProvider.get(getMaxFactsNumber()))
-    }
+    fun requestContext(catFactProvider: CatFactProvider): RequestContext =
+        runBlocking {
+            RequestContextImpl(catFactProvider.get(getMaxFactsNumber()))
+        }
 
     fun getMaxFactsNumber(): Int {
         val servletRequestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes

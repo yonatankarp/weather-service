@@ -12,4 +12,6 @@ interface RequestContext {
     var facts: Set<Fact>?
 }
 
-open class RequestContextImpl(override var facts: Set<Fact>? = null) : RequestContext
+open class RequestContextImpl(
+    override var facts: Set<Fact>? = null,
+) : RequestContext
